@@ -15,9 +15,26 @@ const TokenType = {
   OR: "or",
   NOT: "not",
   ASSIGN: "=",
-  IDENTIFIER: "",
+  IDENTIFIER: "identifier",
   UNDEFINED: undefined,
+  DO: "do",
+  ELSE: "else",
+  LAMBDA: "lambda",
+  LET: "let",
+  IF: "if",
 };
+
+
+const keyWords = new Set([
+  "and",
+  "do",
+  "or",
+  "if",
+  "else",
+  "not",
+  "lambda",
+  "let",
+]);
 
 const Errors = {
   IMBALANCEDPAREN: "Imabalanced Parenthesis",
@@ -43,6 +60,7 @@ const checkImbalanced = (code: string): Boolean => {
 class Interpreter {
   private semantic_map = new Map<string, any>();
   private nestedExpressions: Token[][] = [];
+  private identifiedTokens: Token[][] = [];
   private tokens: Token[] = [];
   constructor() {}
 
@@ -50,6 +68,7 @@ class Interpreter {
     if (!checkImbalanced(code)) return new Error(Errors.IMBALANCEDPAREN);
     this.tokenize(code);
     this.nest();
+    this.identify();
     return this;
   }
 
@@ -135,10 +154,16 @@ class Interpreter {
               code.at(j) == ")" ||
               code.at(j) == "("
             ) {
+
+              const ident = this.tokens.slice(i, j);
+              // @ts-ignore
+              const keyword = keyWords.has(ident) ? ident.toUpperCase() as keyof typeof TokenType : TokenType.IDENTIFIER;
+
               this.tokens.push({
-                type: TokenType.UNDEFINED,
+                type: keyword,
                 value: code.slice(i, j),
               });
+
               i = j;
               break;
             }
@@ -155,6 +180,9 @@ class Interpreter {
     }
     return this;
   }
+
+  identify(): void {
+  }
 }
 
 
@@ -167,10 +195,10 @@ const nestAux = (
 
   const [current, ...tok] = tokens;
   if (current === undefined) {
-    return [tok, res]
+    return [tok, res];
   }
 
-  if (current.type ==  TokenType.LEFTP) {
+  if (current.type == TokenType.LEFTP) {
     const [remaining, nested] = nestAux(tok);
     // @ts-ignore
     return nestAux(remaining, [...res, nested]);
@@ -178,16 +206,16 @@ const nestAux = (
     return [tok, res];
   } else {
     // @ts-ignore
+    // check for keywords
     return nestAux(tok, [...res, current]);
   }
-
 };
 
 const nest = (tokens: Token[]): Token[][] => {
-  return nestAux(tokens)[1];
+  return nestAux(tokens, [])[1];
 };
 
 const i = new Interpreter();
-i.eval("(+ 1 (- 2 (* 3 (/ 1 100))))");
+i.eval("(+ 1 (- 2 (* 3 (/ 1 a))))");
 
 export { Interpreter, Errors, TokenType as Tokens };
