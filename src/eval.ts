@@ -22,8 +22,8 @@ const TokenType = {
   LAMBDA: "lambda",
   LET: "let",
   IF: "if",
+  NUMBER: "number",
 };
-
 
 const keyWords = new Set([
   "and",
@@ -68,7 +68,6 @@ class Interpreter {
     if (!checkImbalanced(code)) return new Error(Errors.IMBALANCEDPAREN);
     this.tokenize(code);
     this.nest();
-    this.identify();
     return this;
   }
 
@@ -154,10 +153,14 @@ class Interpreter {
               code.at(j) == ")" ||
               code.at(j) == "("
             ) {
-
-              const ident = this.tokens.slice(i, j);
+              const ident = code.slice(i, j).toUpperCase();
               // @ts-ignore
-              const keyword = keyWords.has(ident) ? ident.toUpperCase() as keyof typeof TokenType : TokenType.IDENTIFIER;
+              const keyword =
+                // @ts-ignore
+                TokenType[ident] ||
+                (!isNaN(parseInt(ident))
+                  ? TokenType.IDENTIFIER
+                  : TokenType.NUMBER);
 
               this.tokens.push({
                 type: keyword,
@@ -180,11 +183,7 @@ class Interpreter {
     }
     return this;
   }
-
-  identify(): void {
-  }
 }
-
 
 // first arg returns remaining tokens, the second returns all the tokens under the current nesting
 const nestAux = (
@@ -206,7 +205,6 @@ const nestAux = (
     return [tok, res];
   } else {
     // @ts-ignore
-    // check for keywords
     return nestAux(tok, [...res, current]);
   }
 };
@@ -217,5 +215,9 @@ const nest = (tokens: Token[]): Token[][] => {
 
 const i = new Interpreter();
 i.eval("(+ 1 (- 2 (* 3 (/ 1 a))))");
+
+const j = new Interpreter();
+j.eval("(lambda (a) (+ a 2))");
+console.dir(j.getNested());
 
 export { Interpreter, Errors, TokenType as Tokens };
