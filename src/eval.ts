@@ -62,12 +62,20 @@ class Interpreter {
   private nestedExpressions: Token[][] = [];
   private identifiedTokens: Token[][] = [];
   private tokens: Token[] = [];
+  private table: Map<string, Token>[] = [];
+
   constructor() {}
 
   eval(code: string): Error | any {
     if (!checkImbalanced(code)) return new Error(Errors.IMBALANCEDPAREN);
     this.tokenize(code);
     this.nest();
+    return this;
+  }
+
+  semantic_check(): Interpreter {
+    execute(this.nestedExpressions, this.table);
+
     return this;
   }
 
@@ -86,6 +94,44 @@ class Interpreter {
     return this.nestedExpressions;
   }
 
+  getIdent(ident: string): any | undefined {
+    let tab = this.table[this.table.length - 1];
+    while (tab) {
+      if (tab.has(ident)) {
+        return tab.get(ident);
+      }
+      tab = this.table[this.table.length - 1];
+    }
+    return undefined;
+  }
+
+  setIdent(ident: string, value: any): boolean {
+    let tab = this.table[this.table.length - 1];
+    if (tab.has(ident)) {
+      tab.set(ident, value);
+      return true;
+    }
+    return false;
+  }
+
+  initIdent(ident: string, value: any): boolean {
+    let tab = this.table[this.table.length - 1];
+    if (this.getIdent(ident) == undefined) {
+      return false;
+    }
+    tab.set(ident, value);
+    return true;
+  }
+
+  enterScope(): void {
+    this.table.push(new Map());
+  }
+
+  exitScope(): void {
+    this.table.pop();
+  }
+  
+ 
   tokenize(code: string): void {
     let i = 0;
     while (i < code.length) {
@@ -213,11 +259,15 @@ const nest = (tokens: Token[]): Token[][] => {
   return nestAux(tokens, [])[1];
 };
 
+type Symtable = Map<String, any>;
+
+const execute = (tokens: Token[][], symtables: Symtable[]) => {};
+
 const i = new Interpreter();
 i.eval("(+ 1 (- 2 (* 3 (/ 1 a))))");
 
 const j = new Interpreter();
-j.eval("(lambda (a) (+ a 2))");
+j.eval("(lambda (+ a 1) (+ a 2))");
 console.dir(j.getNested());
 
 export { Interpreter, Errors, TokenType as Tokens };
