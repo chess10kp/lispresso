@@ -22,10 +22,10 @@ const TokenType = {
   DO: "do",
   DEF: "def",
   ELSE: "else",
-  FN: "fn",
   LET: "let",
   IF: "if",
   NUMBER: "number",
+  BOOLEAN: "boolean",
 };
 
 const keyWords = new Set([
@@ -137,22 +137,23 @@ class Interpreter {
           if (code.at(i + 1) == "=") {
             this.tokens.push({ type: TokenType.GTE, value: ">=" });
             i += 2;
+          } else {
+            this.tokens.push({ type: TokenType.GT, value: ">" });
+            i++;
           }
           break;
         case "<":
           if (code.at(i + 1) == "=") {
             this.tokens.push({ type: TokenType.LTE, value: "<=" });
             i += 2;
+          } else {
+            this.tokens.push({ type: TokenType.LT, value: "<" });
+            i++;
           }
           break;
         case "=":
-          if (code.at(i + 1) == "=") {
-            this.tokens.push({ type: TokenType.EQ, value: "==" });
-            i += 2;
-          } else {
-            this.tokens.push({ type: TokenType.ASSIGN, value: "=" });
-            i++;
-          }
+          this.tokens.push({ type: TokenType.EQ, value: "=" });
+          i++;
           break;
 
         case "\n":
@@ -307,81 +308,113 @@ const executeAux = (
   symtables: Symtable[],
 ): Token | Error => {
   if (block instanceof Array && !(block[0] instanceof Array)) {
-    switch(block[0].type) {
+    switch (block[0].type) {
       case TokenType.DO:
-      const [ele, ...rest] = block;
-      for (const block of rest) {
-        executeAux(block, symtables);
-      }
-      break;
-      case TokenType.DEF:
-      const [_, ident, value] = block;
+        const [ele, ...rest] = block;
+        for (const block of rest) {
+          executeAux(block, symtables);
+        }
+        break;
+
+      case TokenType.LET:
+        const [_, ident, value] = block;
         if (ident instanceof Array) {
           return new Error(Errors.SYNTAXERROR);
         }
-      if (symtables.length == 0) {
-        symtables.push(new Map());
-      }
-      symtables[symtables.length - 1].set(
-        ident.value,
-        executeAux(value, symtables),
-      );
+        if (symtables.length == 0) {
+          symtables.push(new Map());
+        }
+        symtables[symtables.length - 1].set(
+          ident.value,
+          executeAux(value, symtables),
+        );
+        break;
 
-    }
-    if (block[0].type == TokenType.DO) {
-      const [ele, ...rest] = block;
-      for (const block of rest) {
-        executeAux(block, symtables);
-      }
-    } else if (block[0].type == TokenType.DEF) {
-      const [_, ident, value] = block;
-      if (ident instanceof Array) {
-        return new Error(Errors.SYNTAXERROR);
-      }
+      case TokenType.IF:
+        const [__, ifCondition, ifBlock, elseBlock] = block;
+        const cond = executeAux(ifCondition, symtables);
+        if (cond instanceof Error) {
+          return new Error(Errors.SYNTAXERROR);
+        }
+        if (cond.value == "true") {
+          return executeAux(ifBlock, symtables);
+        } else {
+          return executeAux(elseBlock, symtables);
+        }
 
-      if (symtables.length == 0) {
-        symtables.push(new Map());
-      }
-      symtables[symtables.length - 1].set(
-        ident.value,
-        executeAux(value, symtables),
-      );
-    } else if (block[0].type == TokenType.FN) {
-      const [_, ident, ...body] = block;
-      if (ident instanceof Array) {
-        return new Error(Errors.SYNTAXERROR);
-      }
-      if (symtables.length == 0) {
-        symtables.push(new Map());
-      }
-      const functionBody = executeAux(body, symtables);
-      symtables[symtables.length - 1].set(ident.value, functionBody);
-    } else if (block[0].type == TokenType.ADD) {
-      const res = add(block, symtables);
-      if (res instanceof Error) {
-        return res;
-      }
-      return { type: TokenType.NUMBER, value: res.toString() };
-    } else if (block[0].type == TokenType.SUB) {
-      const res = sub(block, symtables);
+      case TokenType.GT:
+      case TokenType.LT:
+      case TokenType.GTE:
+      case TokenType.LTE:
+      case TokenType.EQ:
+        if (block.length != 3) {
+          return new Error(Errors.SYNTAXERROR);
+        }
 
-      if (res instanceof Error) {
-        return res;
-      }
-      return { type: TokenType.NUMBER, value: res.toString() };
-    } else if (block[0].type == TokenType.MUL) {
-      const res = mul(block, symtables);
+        const [sym, a, b] = block;
 
-      if (res instanceof Error) {
-        return res;
-      }
-      return { type: TokenType.NUMBER, value: res.toString() };
-    } else if (block[0].type == TokenType.DIV) {
-      const res = div(block, symtables);
-      if (res instanceof Error) {
-        return res;
-      }
-      return { type: TokenType.NUMBER, value: res.toString() };
+        const aVal = executeAux(a, symtables);
+        const bVal = executeAux(b, symtables);
+
+        if (aVal instanceof Error || bVal instanceof Error) {
+          return aVal instanceof Error ? aVal : bVal;
+        }
+
+        if (sym.type == TokenType.GT)
+          return {
+            type: TokenType.BOOLEAN,
+            value: (parseInt(aVal.value) > parseInt(bVal.value)).toString(),
+          };
+        else if (sym.type == TokenType.LT)
+          return {
+            type: TokenType.BOOLEAN,
+            value: (parseInt(aVal.value) < parseInt(bVal.value)).toString(),
+          };
+        else if (sym.type == TokenType.GTE)
+          return {
+            type: TokenType.BOOLEAN,
+            value: (parseInt(aVal.value) >= parseInt(bVal.value)).toString(),
+          };
+        else if (sym.type == TokenType.LTE)
+          return {
+            type: TokenType.BOOLEAN,
+            value: (parseInt(aVal.value) <= parseInt(bVal.value)).toString(),
+          };
+        else if (sym.type == TokenType.EQ)
+          return {
+            type: TokenType.BOOLEAN,
+            value: (parseInt(aVal.value) == parseInt(bVal.value)).toString(),
+          };
+        //
+        break;
+
+      case TokenType.ADD:
+        const res = add(block, symtables);
+        if (res instanceof Error) {
+          return res;
+        }
+        return { type: TokenType.NUMBER, value: res.toString() };
+
+      case TokenType.SUB:
+        const subRes = sub(block, symtables);
+        if (subRes instanceof Error) {
+          return subRes;
+        }
+        return { type: TokenType.NUMBER, value: subRes.toString() };
+
+      case TokenType.MUL:
+        const mulRes = mul(block, symtables);
+        if (mulRes instanceof Error) {
+          return mulRes;
+        }
+        return { type: TokenType.NUMBER, value: mulRes.toString() };
+
+      case TokenType.DIV:
+        const divRes = div(block, symtables);
+        if (divRes instanceof Error) {
+          return divRes;
+        }
+        return { type: TokenType.NUMBER, value: divRes.toString() };
     }
   } else if (!(block instanceof Array)) {
     if (block.type == TokenType.IDENTIFIER) {
@@ -461,40 +494,67 @@ const execute = (
     return [new Error(Errors.SYNTAXERROR)];
   }
 
-  if (firstBlock[0].type == TokenType.DO) {
-    const [ele, ...rest] = firstBlock;
-    for (const block of rest) {
-      acc.push(executeAux(block, symtables));
-    }
-  } else if (firstBlock[0].type == TokenType.DEF) {
-    const [_, ident, value] = firstBlock;
-    if (ident instanceof Array) {
-      return [new Error(Errors.SYNTAXERROR)];
-    }
+  switch (firstBlock[0].type) {
+    case TokenType.DO:
+      const [ele, ...rest] = firstBlock;
+      for (const block of rest) {
+        acc.push(executeAux(block, symtables));
+      }
 
-    if (symtables.length == 0) {
-      symtables.push(new Map());
-    }
+      break;
 
-    symtables[symtables.length - 1].set(
-      ident.value,
-      executeAux(value, symtables),
-    );
-  } else if (firstBlock[0].type == TokenType.FN) {
-    const [_, ident, ...body] = firstBlock;
-    if (symtables.length == 0) {
-      symtables.push(new Map());
-    }
+    case TokenType.DEF:
+      const [_, ident, value] = firstBlock;
+      if (ident instanceof Array) {
+        return [new Error(Errors.SYNTAXERROR)];
+      }
 
-    if (ident instanceof Array) {
-      return [new Error(Errors.SYNTAXERROR)];
-    }
+      if (symtables.length == 0) {
+        symtables.push(new Map());
+      }
 
-    symtables[symtables.length - 1].set(
-      ident.value,
-      executeAux(body, symtables),
-    );
+      symtables[symtables.length - 1].set(
+        ident.value,
+        executeAux(value, symtables),
+      );
+
+      break;
+
+    case TokenType.IF:
+      const [__, ifCondition, ifBlock, elseBlock] = firstBlock;
+      const cond = executeAux(ifCondition, symtables);
+      if (cond instanceof Error) {
+        return [cond];
+      }
+      if (cond.value == "true") {
+        acc.push(executeAux(ifBlock, symtables));
+      } else {
+        acc.push(executeAux(elseBlock, symtables));
+      }
+      break;
+
+    case TokenType.DEF:
+      if (firstBlock.length != 4) {
+        return [new Error(Errors.SYNTAXERROR)];
+      }
+
+      const [defkwd, fnIdent, params, functionBlock] = firstBlock;
+
+      if (fnIdent instanceof Array) {
+        return [new Error(Errors.SYNTAXERROR)];
+      }
+
+      if (symtables.length == 0) {
+        symtables.push(new Map());
+      }
+
+      symtables[symtables.length - 1].set(fnIdent.value, {
+        params: params,
+        block: functionBlock,
+      });
+      break;
   }
+
   return acc;
 };
 
@@ -502,7 +562,9 @@ const i = new Interpreter();
 i.eval("(do (+ 1 1))");
 
 const j = new Interpreter();
-const a = j.eval("(do (let a 1) (+ a (- 2 (* 3 (/ 1 100)))))");
+// const a = j.eval("(do (let a 2) (def new-fn (a b) (+ a b)) (let b 3) (+ a b (- 2 (* 3 (/ 1 100)))))");
+// const a = j.eval("(do (def new-fn (a b) (+ a b)))");
+const a = j.eval("(do (< 2 2))");
 console.dir(a, { depth: null });
 
 export { Interpreter, Errors, TokenType as Tokens };
