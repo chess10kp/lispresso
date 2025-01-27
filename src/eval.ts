@@ -298,6 +298,72 @@ const executeAux = (
         return new Error(Errors.UNKNOWN);
       }
       return res;
+    } else if (block[0].type == TokenType.SUB) {
+      const [_, ...rest] = block;
+      // @ts-ignore
+      const res = rest.reduce((acc, curr) => {
+        if (curr instanceof Array) {
+          // @ts-ignore
+          return acc.value - parseInt(executeAux(curr, symtables).value);
+        } else {
+          if (acc instanceof Array || curr instanceof Array) {
+            return new Error(Errors.UNKNOWN);
+          }
+          return {
+            type: TokenType.NUMBER,
+            value: parseInt(acc.value) - parseInt(curr.value),
+          };
+        }
+      });
+      if (res instanceof Array) {
+        return new Error(Errors.UNKNOWN);
+      }
+      return res;
+
+    } else if (block[0].type == TokenType.MUL) {
+      const [_, ...rest] = block;
+      // @ts-ignore
+      const res = rest.reduce((acc, curr) => {
+        if (curr instanceof Array) {
+          // @ts-ignore
+          return acc.value * parseInt(executeAux(curr, symtables).value);
+        } else {
+          if (acc instanceof Array || curr instanceof Array) {
+            return new Error(Errors.UNKNOWN);
+          }
+          return {
+            type: TokenType.NUMBER,
+            value: parseInt(acc.value) * parseInt(curr.value),
+          };
+        }
+      });
+      if (res instanceof Array) {
+        return new Error(Errors.UNKNOWN);
+      }
+      return res;
+
+    } else if (block[0].type == TokenType.DIV) {
+      const [_, ...rest] = block;
+      // @ts-ignore
+      const res = rest.reduce((acc, curr) => {
+        if (curr instanceof Array) {
+          // @ts-ignore
+          return acc.value * parseInt(executeAux(curr, symtables).value);
+        } else {
+          if (acc instanceof Array || curr instanceof Array) {
+            return new Error(Errors.UNKNOWN);
+          }
+          return {
+            type: TokenType.NUMBER,
+            value: parseInt(acc.value) / parseInt(curr.value),
+          };
+        }
+      });
+      if (res instanceof Array) {
+        return new Error(Errors.UNKNOWN);
+      }
+      return res;
+
     }
   }
   return { type: "", value: "" };
@@ -404,7 +470,7 @@ const i = new Interpreter();
 i.eval("(do (+ 1 1))");
 
 const j = new Interpreter();
-const a = j.eval("(do (+ 1 1))");
+const a = j.eval("(do (- 1 1))");
 console.dir(a, { depth: null });
 
 export { Interpreter, Errors, TokenType as Tokens };
