@@ -1,0 +1,265 @@
+body {
+    background-image: url('background.svg');
+    
+    background-size: 5%;    
+   
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Barrio&display=swap');
+.barrio-regular {
+    font-family: "Barrio", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+.top{
+    padding: 30%;
+    min-width: 100vw;
+    min-height: 100vh;  
+    background-image: url('background.png');
+    background-size: contain;   
+    
+    position: absolute;
+    background-repeat: no-repeat;
+    padding-bottom: 0%;
+}
+.top .logo{
+    width: 50vh;
+    position: absolute;  
+    top: 5%;  
+    left: 5%; 
+    
+}
+p{
+    font-family: "Geo", serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #00ff26;
+    font-size: 150%;
+    background-color: rgb(38, 41, 42);
+}
+.top .topbox p{
+    position: absolute;
+    left: 35%;
+    top:5%;
+    width: 200px; 
+    height: 100px;
+    padding:10px;
+}
+
+.top .wlisp p{
+    position: absolute;
+    left: 27%;
+    top:57%;
+    width: 155px; 
+    height: 100px;
+    padding:15px;
+    padding-bottom: 60px;
+}
+.top .tlisp p{
+    position: absolute;
+    left: 16%;
+    top:74%;
+    width: 155px; 
+    height: 100px;
+    padding:15px;
+    padding-bottom: 35px;
+}
+
+
+
+.top .arrow{
+    position: absolute;
+    top:10%;
+    left:35%;
+    width: 10vw;
+    height: 50vh;
+   
+}
+.top .mouse{
+    position: absolute;
+    top:30%;
+    left:36%;
+    width: 19vw;
+    height: 35vh;
+}
+.top .robot{
+    position: absolute;
+    left:3%;
+    top:60%;
+    width: 20vw;
+    height: 50vh;
+    background-image: url('lisc_1.png');
+    background-size: cover;
+}
+
+.top .robot:hover {
+    background-image: url('lisc_2.png');
+}
+
+.top .corner{
+    opacity: 0;
+    position: absolute;
+    top:35%;
+    left:35%;
+    width: 19vw;
+    height: 7vh;
+}
+.top .corner:hover{
+    opacity: 1;
+}
+header{
+    background-color:#f7edd9;
+    margin-top: 1%;
+    flex-direction: column;
+    border-color: black;
+    border-width: 10%; 
+    border-style: solid;
+  
+}
+header li{
+    width: fit-content;
+    padding-inline: 9%;
+    display: inline-block;
+    font-size: 200%;
+}
+header li a{
+    padding-inline: 10%;
+    border-color: black;
+    border-width: 10%;
+    border-style: solid;
+   
+    color: #85ba38;
+}
+header li a:hover{
+   
+    text-decoration:underline;
+    text-decoration-color:yellow ;
+}
+header .logo a{
+    text-align: center;
+    color: transparent; 
+    background-image: url("official_logo.png");
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-size: 200%;
+    padding-left: 50%;
+}
+header .logo a:hover{
+ 
+    text-decoration: underline;
+    text-decoration-color:yellow ;
+    
+}
+
+.about{
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: #2d0230;
+    top:181.5%;
+    left: -1%;
+}
+.about .rocket{
+    height:90vh;
+    width: 30vw;
+    left:64%;
+    position: absolute;
+    background-image: url("rocket_1.png");
+    background-size: cover;
+}
+
+.about .rocket:hover{
+    background-image: url('rocket_2.png');
+}
+.about .about_us{
+    position: absolute;
+    width: 40vw;
+    left:5%;
+    top:20%;
+}
+.about .lisp_legacy{
+    position: absolute;
+    width: 40vw;
+    left:20%;
+    top:50%;
+}
+.about p2{
+color: #00ff26;
+font-size: larger;
+position: absolute;
+left:5%;
+top:10%;
+
+}
+
+.contact{
+
+    height: 90vh;
+    width: 99vw;
+   
+    background-color:#ee7212;
+    position: absolute;
+    top:281%;
+    left: 0%;
+  
+}
+.contact .contact_us{
+padding: 100px;
+background-color: rgb(38, 41, 42);
+position: absolute;
+left:1%;
+top:20%;
+
+}
+.contact .contact_us .one{
+    color:orange;
+}
+.contact .contact_us .two{
+    position: absolute;
+    left:35%;
+    top:35%;
+    color:orange;
+}
+.contact .contact_us .three{
+    position: absolute;
+    left:56%;
+    top:30%;
+}
+.contact .team{
+padding: 100px;
+background-color: rgb(38, 41, 42);
+position: absolute;
+left: 55%;
+top:8%;
+padding-bottom: 450px;
+padding-top: 10px;
+padding-right: 400px;
+}
+
+.contact .team .nitin{
+border: solid;
+border-color: #ee7212;
+position: absolute;
+width: 15vw;
+left:10%;
+padding-left: 20px;
+padding-bottom: 10px;
+}
+
+.contact .team .maria{
+    border: solid;
+border-color: #ee7212;
+position: absolute;
+width: 15vw;
+left: 55%;
+padding-left: 20px;
+padding-bottom: 10px;
+}
+.contact .team .maria img{
+    width: 10vw;
+}
+.contact .team .maria li{
+    
+}
