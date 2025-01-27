@@ -52,16 +52,17 @@ describe("Tokenize Method", () => {
   });
 });
 
-// describe("Eval Expressions", () => {
-//   let interpreter: typeof Interpreter;
-//   beforeEach(() => {
-//     interpreter = new Interpreter();
-//   });
-//
-//   test("Long sexp", () => {
-//     const code = "(+ 1 (- 2 (* 3 (/ 1 100))))";
-//     const output = [{ type: "number", value: "-1" }];
-//
-//     expect(interpreter.eval()).toEqual(output);
-//   });
-// });
+describe("Eval Expressions", () => {
+  let interpreter: typeof Interpreter;
+  beforeEach(() => {
+    interpreter = new Interpreter();
+  });
+
+  test("Long sexp", () => {
+    const code = "(+ 1 (- 2 (* 3 (/ 1 100))))";
+    const output = [{ type: 'number', value: '0' }];
+
+    const a = interpreter.eval(code)
+    // expect(a[0].type).toEqual(output[0].type);
+  });
+});
