@@ -47,6 +47,7 @@ const Errors = {
   SYNTAXERROR: "Syntax Error",
   UNKNOWN: "Unknown Error",
   UNKNOWNVARIABLE: "Unknown Variable",
+  DIVBYZERO: "Division by Zero",
   NAN: "NAN",
 };
 
@@ -77,7 +78,6 @@ class Interpreter {
     if (!checkImbalanced(code)) return [new Error(Errors.IMBALANCEDPAREN)];
     this.tokenize(code);
     this.nest();
-    console.dir(this.nestedExpressions, { depth: null });
     return this.execute();
   }
 
@@ -230,8 +230,80 @@ const nest = (tokens: Token[]): Token[][] => {
 
 type Symtable = Map<String, any>;
 
+const add = (block: (Token | Token[])[], symtables: Symtable[]) => {
+  const [_, ...rest] = block;
+  // @ts-ignore
+  const res = rest.reduce((acc, curr) => {
+    const a = executeAux(curr, symtables);
+    if (a instanceof Error) {
+      return a;
+    }
+    return acc + parseInt(a.value);
+  }, 0);
+  if (res instanceof Array) {
+    return new Error(Errors.UNKNOWN);
+  }
+  return res;
+};
+
+const sub = (block: (Token | Token[])[], symtables: Symtable[]) => {
+  const [_, ...rest] = block;
+  // @ts-ignore
+  const res = rest.reduce((acc, curr) => {
+    const a = executeAux(curr, symtables);
+    if (a instanceof Error) {
+      return a;
+    }
+    return acc - parseInt(a.value);
+  }, 0);
+  if (res instanceof Array) {
+    return new Error(Errors.UNKNOWN);
+  }
+  return res;
+};
+
+const mul = (block: (Token | Token[])[], symtables: Symtable[]) => {
+  const [_, ...rest] = block;
+  // @ts-ignore
+  const res = rest.reduce((acc, curr) => {
+    const a = executeAux(curr, symtables);
+    if (a instanceof Error) {
+      return a;
+    }
+    const tail = parseInt(a.value);
+    if (tail == Infinity) {
+      return new Error(Errors.DIVBYZERO);
+    }
+    return acc * parseInt(a.value);
+  }, 1);
+  if (res instanceof Array) {
+    return new Error(Errors.UNKNOWN);
+  }
+  return res;
+};
+
+const div = (block: (Token | Token[])[], symtables: Symtable[]) => {
+  const [_, ...rest] = block;
+  // @ts-ignore
+  const res = rest.reduce((acc, curr) => {
+    const a = executeAux(curr, symtables);
+    if (a instanceof Error) {
+      return a;
+    }
+    const tail = parseInt(a.value);
+    if (tail == 0) {
+      return new Error(Errors.DIVBYZERO);
+    }
+    return acc / tail;
+  }, 1);
+  if (res instanceof Array) {
+    return new Error(Errors.UNKNOWN);
+  }
+  return res;
+};
+
 const executeAux = (
-  block: (Token | Token[])[] | Token | Token[],
+  block: (Token | Token[])[] | Token,
   symtables: Symtable[],
 ): Token | Error => {
   if (block instanceof Array && !(block[0] instanceof Array)) {
@@ -263,107 +335,46 @@ const executeAux = (
       }
       const functionBody = executeAux(body, symtables);
       symtables[symtables.length - 1].set(ident.value, functionBody);
-    } else if (block[0].type == TokenType.IDENTIFIER) {
-      const [ident, rest] = block;
-      const value = getIdent(symtables, ident.value);
+    } else if (block[0].type == TokenType.ADD) {
+      const res = add(block, symtables);
+      if (res instanceof Error) {
+        return res;
+      }
+      return { type: TokenType.NUMBER, value: res.toString() };
+    } else if (block[0].type == TokenType.SUB) {
+      const res = sub(block, symtables);
+
+      if (res instanceof Error) {
+        return res;
+      }
+      return { type: TokenType.NUMBER, value: res.toString() };
+    } else if (block[0].type == TokenType.MUL) {
+      const res = mul(block, symtables);
+
+      if (res instanceof Error) {
+        return res;
+      }
+      return { type: TokenType.NUMBER, value: res.toString() };
+    } else if (block[0].type == TokenType.DIV) {
+      const res = div(block, symtables);
+      if (res instanceof Error) {
+        return res;
+      }
+      return { type: TokenType.NUMBER, value: res.toString() };
+    }
+  } else if (!(block instanceof Array)) {
+    if (block.type == TokenType.IDENTIFIER) {
+      const value = getIdent(symtables, block.value);
       if (value === undefined) {
         return new Error(Errors.UNKNOWNVARIABLE);
       }
-      console.log(value);
       return value;
-    } else if (block[0].type == TokenType.NUMBER) {
-      const [ident, res] = block;
-      const value = parseInt(ident.value);
+    } else if (block.type == TokenType.NUMBER) {
+      const value = parseInt(block.value);
       if (isNaN(value)) {
         return new Error(Errors.NAN);
       }
-      return block[0];
-    } else if (block[0].type == TokenType.ADD) {
-      const [_, ...rest] = block;
-      const res = rest.reduce((acc, curr) => {
-        if (curr instanceof Array) {
-          // @ts-ignore
-          return acc.value + parseInt(executeAux(curr, symtables).value);
-        } else {
-          if (acc instanceof Array || curr instanceof Array) {
-            return new Error(Errors.UNKNOWN);
-          }
-          return {
-            type: TokenType.NUMBER,
-            value: parseInt(acc.value) + parseInt(curr.value),
-          };
-        }
-      });
-      if (res instanceof Array) {
-        return new Error(Errors.UNKNOWN);
-      }
-      return res;
-    } else if (block[0].type == TokenType.SUB) {
-      const [_, ...rest] = block;
-      // @ts-ignore
-      const res = rest.reduce((acc, curr) => {
-        if (curr instanceof Array) {
-          // @ts-ignore
-          return acc.value - parseInt(executeAux(curr, symtables).value);
-        } else {
-          if (acc instanceof Array || curr instanceof Array) {
-            return new Error(Errors.UNKNOWN);
-          }
-          return {
-            type: TokenType.NUMBER,
-            value: parseInt(acc.value) - parseInt(curr.value),
-          };
-        }
-      });
-      if (res instanceof Array) {
-        return new Error(Errors.UNKNOWN);
-      }
-      return res;
-
-    } else if (block[0].type == TokenType.MUL) {
-      const [_, ...rest] = block;
-      // @ts-ignore
-      const res = rest.reduce((acc, curr) => {
-        if (curr instanceof Array) {
-          // @ts-ignore
-          return acc.value * parseInt(executeAux(curr, symtables).value);
-        } else {
-          if (acc instanceof Array || curr instanceof Array) {
-            return new Error(Errors.UNKNOWN);
-          }
-          return {
-            type: TokenType.NUMBER,
-            value: parseInt(acc.value) * parseInt(curr.value),
-          };
-        }
-      });
-      if (res instanceof Array) {
-        return new Error(Errors.UNKNOWN);
-      }
-      return res;
-
-    } else if (block[0].type == TokenType.DIV) {
-      const [_, ...rest] = block;
-      // @ts-ignore
-      const res = rest.reduce((acc, curr) => {
-        if (curr instanceof Array) {
-          // @ts-ignore
-          return acc.value * parseInt(executeAux(curr, symtables).value);
-        } else {
-          if (acc instanceof Array || curr instanceof Array) {
-            return new Error(Errors.UNKNOWN);
-          }
-          return {
-            type: TokenType.NUMBER,
-            value: parseInt(acc.value) / parseInt(curr.value),
-          };
-        }
-      });
-      if (res instanceof Array) {
-        return new Error(Errors.UNKNOWN);
-      }
-      return res;
-
+      return block;
     }
   }
   return { type: "", value: "" };
@@ -470,7 +481,7 @@ const i = new Interpreter();
 i.eval("(do (+ 1 1))");
 
 const j = new Interpreter();
-const a = j.eval("(do (- 1 1))");
+const a = j.eval("(do (+  1  2 1))");
 console.dir(a, { depth: null });
 
 export { Interpreter, Errors, TokenType as Tokens };
