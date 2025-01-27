@@ -307,6 +307,27 @@ const executeAux = (
   symtables: Symtable[],
 ): Token | Error => {
   if (block instanceof Array && !(block[0] instanceof Array)) {
+    switch(block[0].type) {
+      case TokenType.DO:
+      const [ele, ...rest] = block;
+      for (const block of rest) {
+        executeAux(block, symtables);
+      }
+      break;
+      case TokenType.DEF:
+      const [_, ident, value] = block;
+        if (ident instanceof Array) {
+          return new Error(Errors.SYNTAXERROR);
+        }
+      if (symtables.length == 0) {
+        symtables.push(new Map());
+      }
+      symtables[symtables.length - 1].set(
+        ident.value,
+        executeAux(value, symtables),
+      );
+
+    }
     if (block[0].type == TokenType.DO) {
       const [ele, ...rest] = block;
       for (const block of rest) {
@@ -481,7 +502,7 @@ const i = new Interpreter();
 i.eval("(do (+ 1 1))");
 
 const j = new Interpreter();
-const a = j.eval("(do (+  1  2 1))");
+const a = j.eval("(do (+ 1 (- 2 (* 3 (/ 1 100)))))");
 console.dir(a, { depth: null });
 
 export { Interpreter, Errors, TokenType as Tokens };
