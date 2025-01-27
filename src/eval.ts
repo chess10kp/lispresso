@@ -502,7 +502,7 @@ const i = new Interpreter();
 i.eval("(do (+ 1 1))");
 
 const j = new Interpreter();
-const a = j.eval("(do (+ 1 (- 2 (* 3 (/ 1 100)))))");
+const a = j.eval("(do (let a 1) (+ a (- 2 (* 3 (/ 1 100)))))");
 console.dir(a, { depth: null });
 
 export { Interpreter, Errors, TokenType as Tokens };
