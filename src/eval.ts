@@ -74,6 +74,10 @@ class Interpreter {
   constructor() {}
 
   eval(code: string): (Error | Token)[] {
+    this.semantic_map.clear();
+    this.nestedExpressions = [];
+    this.tokens = [];
+    this.table = [];
     if (!checkImbalanced(code)) return [new Error(Errors.IMBALANCEDPAREN)];
     this.tokenize(code);
     this.nest();
@@ -415,6 +419,7 @@ const executeAux = (
         return { type: TokenType.NUMBER, value: divRes.toString() };
 
       default:
+
       // NEXT: handle this case, get the function to be called and then call it
     }
   } else if (!(block instanceof Array)) {
@@ -504,23 +509,6 @@ const execute = (
 
       break;
 
-    case TokenType.DEF:
-      const [_, ident, value] = firstBlock;
-      if (ident instanceof Array) {
-        return [new Error(Errors.SYNTAXERROR)];
-      }
-
-      if (symtables.length == 0) {
-        symtables.push(new Map());
-      }
-
-      symtables[symtables.length - 1].set(
-        ident.value,
-        executeAux(value, symtables),
-      );
-
-      break;
-
     case TokenType.IF:
       const [__, ifCondition, ifBlock, elseBlock] = firstBlock;
       const cond = executeAux(ifCondition, symtables);
@@ -571,5 +559,4 @@ console.dir(a, { depth: null });
 const b = j.eval("(do (if (> 4 2) 1 3))");
 console.dir(b, { depth: null });
 
-console.log("hi")
 export { Interpreter, Errors, TokenType as Tokens };
