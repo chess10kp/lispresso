@@ -353,7 +353,6 @@ const executeAux = (
 
         const aVal = executeAux(a, symtables);
         const bVal = executeAux(b, symtables);
-        console.log(aVal.value, bVal.value, parseInt(aVal.value) > parseInt(bVal.value))
 
         if (aVal instanceof Error || bVal instanceof Error) {
           return aVal instanceof Error ? aVal : bVal;

@@ -1,10 +1,16 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
   /* config options here */
-  basePath: "/lispresso",
   output: "export",
-  reactStrictMode: true, 
+  images: {
+    unoptimized: true,
+  },
+  basePath: isProd ? "/lispresso" : "",
+  assetPrefix: isProd ? "/lispresso" : "",
+  reactStrictMode: true,
 };
 
-export default nextConfig
+export default nextConfig;
