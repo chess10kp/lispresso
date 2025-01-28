@@ -14,8 +14,8 @@ body {
   
 .top{
     padding: 30%;
-    min-width: 100vw;
-    min-height: 100vh;  
+    width: 100vw;
+    height: 100vh;  
     background-image: url('background.png');
     background-size: contain;   
     
@@ -260,6 +260,289 @@ padding-bottom: 10px;
 .contact .team .maria img{
     width: 10vw;
 }
-.contact .team .maria li{
+
+@media (max-width: 1500px) {
+    .top{
+        background-size: contain;
+        height: 60vh;
+    }
+    p{
+        font-size: medium;
+        position:absolute;
+    }
+  .top .right{
+    position:absolute;
+    left:30%;
+    top:30%;
+  }
+  .top .topbox p{
+     
+        left: 30%;
+        top:5%;
+        width: 10%; 
+        height: 10%;
+    }
+    .top .corner{
+        opacity: 0;
+        position: absolute;
+        top:75px;
+        left:29px;
+        width: 10vw;
+        height: 5vh;
+    }
+
+  .top .logo{
+    width: 30vh;
+    position: absolute;  
+    top: 6%;  
+    left: 5%; 
+  }
     
+
+    .top .arrow{
+        position: absolute;
+        top:-750%;
+        left:30px;
+        width: 10vw;
+        height: 50vh;
+       
+    }
+    .top .mouse{
+
+        top:30%;
+        left:36%;
+        width: 19vw;
+        height: 35vh;
+    }
+   
+    
+
+}
+@media (max-width: 1000px) {
+    .top{
+        background-size: contain;
+        height: 60vh;
+    }
+    p{
+        font-size: medium;
+        position:absolute;
+    }
+  .top .right{
+    position:absolute;
+    left:40%;
+    top:30%;
+  }
+  .top .logo{
+    width: 30vh;
+    position: absolute;  
+    top: 6%;  
+    left: 5%; 
+  }
+    .top .topbox p{
+     
+        left: 40%;
+        top:5%;
+        width: 10%; 
+        height: 10%;
+    }
+
+    .top .arrow{
+        position: absolute;
+        top:-750%;
+        left:30px;
+        width: 10vw;
+        height: 50vh;
+       
+    }
+    .top .mouse{
+
+        top:30%;
+        left:36%;
+        width: 19vw;
+        height: 35vh;
+    }
+    .top .corner{
+        opacity: 0;
+        position: absolute;
+        top:95px;
+        left:20px;
+        width: 10vw;
+        height: 3vh;
+    }
+    
+
+}
+@media (max-width: 900px) {
+    .top{
+        background-size: contain;
+        height: 60vh;
+    }
+    p{
+        font-size: medium;
+        position:absolute;
+    }
+  .top .right{
+    position:absolute;
+    left:450px;
+    top:30%;
+  }
+  .top .topbox p{
+     
+        left: 40%;
+        top:5%;
+        width: 10%; 
+        height: 10%;
+    }
+    .top .corner{
+        opacity: 0;
+        position: absolute;
+        top:89px;
+        left:25px;
+        width: 10vw;
+        height: 4vh;
+    }
+
+  .top .logo{
+    width: 30vh;
+    position: absolute;  
+    top: 5%;  
+    left: 5%; 
+  }
+    
+
+    .top .arrow{
+        position: absolute;
+        top:-750%;
+        left:30px;
+        width: 10vw;
+        height: 50vh;
+       
+    }
+    .top .mouse{
+
+        top:30%;
+        left:36%;
+        width: 19vw;
+        height: 35vh;
+    } 
+
+}
+@media (max-width: 700px) {
+    .top{
+        background-size: contain;
+        height: 60vh;
+    }
+    p{
+        font-size: medium;
+        position:absolute;
+    }
+  .top .right{
+    position:absolute;
+    left:450px;
+    top:30%;
+  }
+  .top .topbox p{
+     
+        left: 45%;
+        top:5%;
+        width: 10%; 
+        height: 15%;
+    }
+    .top .corner{
+        opacity: 0;
+        position: absolute;
+        top:95px;
+        left:20px;
+        width: 10vw;
+        height: 3vh;
+    }
+
+  .top .logo{
+    width: 25vh;
+    position: absolute;  
+    top: 6%;  
+    left: 9%; 
+  }
+    
+
+    .top .arrow{
+        position: absolute;
+        top:-750%;
+        left:30px;
+        width: 10vw;
+        height: 50vh;
+       
+    }
+    .top .mouse{
+
+        top:30%;
+        left:36%;
+        width: 19vw;
+        height: 35vh;
+    } 
+
+}
+
+@media (max-width: 600px) {
+    .top{
+        background-size: contain;
+        height: 60vh;
+    }
+    p{
+        font-size: medium;
+        position:absolute;
+    }
+  .top .right{
+    position:absolute;
+    left:370px;
+    top:34%;
+  }
+  .top .right .mouse{
+    position:absolute;
+   top:-150%;
+  }
+  .top .right .arrow{
+    position:absolute;
+   top:-800%;
+  }
+  .top .topbox p{
+     font-size: small;
+        left: 45%;
+        top:5%;
+        width: 10%; 
+        height: 15%;
+    }
+    .top .corner{
+        opacity: 0;
+        position: absolute;
+        top:60px;
+        left:15px;
+        width: 10vw;
+        height: 3vh;
+    }
+
+  .top .logo{
+    width: 25vh;
+    position: absolute;  
+    top: 6%;  
+    left: 9%; 
+  }
+    
+
+    .top .arrow{
+        position: absolute;
+        top:-750%;
+        left:30px;
+        width: 10vw;
+        height: 50vh;
+       
+    }
+    .top .mouse{
+
+        top:30%;
+        left:36%;
+        width: 19vw;
+        height: 35vh;
+    } 
+
 }
