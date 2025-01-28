@@ -11,12 +11,11 @@ const TokenType = {
   LT: "<",
   GTE: ">=",
   LTE: "<=",
-  EQ: "==",
+  EQ: "=",
   NEQ: "not =",
   AND: "and",
   OR: "or",
   NOT: "not",
-  ASSIGN: "=",
   IDENTIFIER: "identifier",
   UNDEFINED: undefined,
   DO: "do",
@@ -338,9 +337,8 @@ const executeAux = (
         }
         if (cond.value == "true") {
           return executeAux(ifBlock, symtables);
-        } else {
-          return executeAux(elseBlock, symtables);
         }
+        return executeAux(elseBlock, symtables);
 
       case TokenType.GT:
       case TokenType.LT:
@@ -355,6 +353,7 @@ const executeAux = (
 
         const aVal = executeAux(a, symtables);
         const bVal = executeAux(b, symtables);
+        console.log(aVal.value, bVal.value, parseInt(aVal.value) > parseInt(bVal.value))
 
         if (aVal instanceof Error || bVal instanceof Error) {
           return aVal instanceof Error ? aVal : bVal;
@@ -415,6 +414,9 @@ const executeAux = (
           return divRes;
         }
         return { type: TokenType.NUMBER, value: divRes.toString() };
+
+      default:
+      // NEXT: handle this case, get the function to be called and then call it
     }
   } else if (!(block instanceof Array)) {
     if (block.type == TokenType.IDENTIFIER) {
@@ -564,7 +566,11 @@ i.eval("(do (+ 1 1))");
 const j = new Interpreter();
 // const a = j.eval("(do (let a 2) (def new-fn (a b) (+ a b)) (let b 3) (+ a b (- 2 (* 3 (/ 1 100)))))");
 // const a = j.eval("(do (def new-fn (a b) (+ a b)))");
-const a = j.eval("(do (< 2 2))");
+const a = j.eval("(do (< 2 0))");
 console.dir(a, { depth: null });
 
+const b = j.eval("(do (if (> 4 2) 1 3))");
+console.dir(b, { depth: null });
+
+console.log("hi")
 export { Interpreter, Errors, TokenType as Tokens };
