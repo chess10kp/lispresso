@@ -6,19 +6,8 @@ import "./page.css";
 
 const terminalBg = "#f7edd9";
 
-import {
-  navigationMenuTriggerStyle,
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuContent,
-  NavigationMenuTrigger,
-  NavigationMenuLink,
-  NavigationMenuIndicator,
-  NavigationMenuViewport,
-} from "@/components/ui/navigation-menu";
-import { Menubar } from "@/components/ui/menubar";
-
+import { Button, buttonVariants } from "@/components/ui/button";
+import { DisplayTerminal } from "@/components/DisplayTerminal";
 import { Input } from "@/components/ui/input";
 
 import { Textarea } from "@/components/ui/textarea";
@@ -27,15 +16,7 @@ import { Label } from "@radix-ui/react-label";
 import { Terminal } from "@/components/Terminal";
 import { Logo } from "@/components/Logo";
 
-const NavLink = (props: any) => {
-  return (
-    <Link {...props} legacyBehavior passHref>
-      <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-        {props.children}
-      </NavigationMenuLink>
-    </Link>
-  );
-};
+import { NavBar } from "@/components/NavBar";
 
 // #26292a
 // #00ff26
@@ -44,53 +25,89 @@ const NavLink = (props: any) => {
 // #2d0230
 // #f7edd9
 
-const NavBar = () => {
-  const navItems = [{ name: "About", link: "/about" }];
-  return (
-    <Menubar className="m-2 bg-[#f7edd9] flex flex-row justify-between">
-      <div>
-        <Link href="/" className="list-none font-bold">
-          <Image
-            className=" logo sm:w-12 md:w-16 lg:w-20"
-            alt="logo"
-            height={0} // Height auto-scales
-            width={100} // Set a reasonable max width
-            src="/official_logo.png"
-          />
-        </Link>
-      </div>
-      <NavigationMenu className="bg-[#f7edd9]">
-        <NavigationMenuList className="bg-[#f7edd9]">
-          {navItems.map((item, idx) => (
-            <NavigationMenuItem className="bg-[#f7edd9] nav-item" key={idx}>
-              <NavigationMenuLink href={`${item.link}`}>
-                {item.name}
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          ))}
-        </NavigationMenuList>
-      </NavigationMenu>
-    </Menubar>
-  );
-};
-
 export default function Home() {
   return (
-    <div className="body relative flex flex-col min-w-full min-h-screen">
+    <div className="body flex flex-col min-w-full min-h-screen">
       <NavBar />
-      <div className="absolute top-[30%] left-[10%]">
-        <Terminal />
-      </div>
-      <section className="about">
-        <p> About Lispresso</p>
-        <div className="about_us">
-          <p>fix this</p>
+      <Hero></Hero>
+      <section className="relative">
+        <div className="absolute top-[30%] left-[10%]" id="terminal">
+          <Terminal />
         </div>
-        <div className="rocket"></div>
+      </section>
+      <section>
+        <About></About>
       </section>
     </div>
   );
 }
+
+const Hero = () => {
+  return (
+    <section className="container mx-10 grid lg:grid-cols-2 place-items-around py-20 md:py-32 gap-10">
+      <div className="text-center lg:text-start space-y-6">
+        <main className="text-5xl md:text-6xl font-bold geo">
+          <h1 className="">
+            Leverage the{" "}
+            <span className="inline geo bg-gradient-to-r from-[#f7edd9]  to-[#00ff26] text-transparent bg-clip-text">
+              JVM
+            </span>{" "}
+            to write clean, maintainable code
+          </h1>{" "}
+        </main>
+
+        <p className="text-xl text-muted-foreground bg-transparent md:w-10/12 mx-auto lg:mx-0">
+          Clojure lessons so you get productive with Clojure in just 3 days
+        </p>
+      </div>
+      <HeroCards />
+    </section>
+  );
+};
+
+const HeroCards = () => {
+  const clojure = `
+(defn fib [n]
+  (let [next-fib (fn [[a b]] [b (+ a b)])]
+    (->> (iterate next-fib [0 1])
+         (map first)
+         (take n))))
+`;
+  return (
+    <pre>
+      <DisplayTerminal code={clojure} />
+    </pre>
+  );
+};
+
+const About = () => {
+  return (
+    <section id="about" className="py-24 sm:py-32">
+      <div className="bg-muted/50 border rounded-lg py-12">
+        <div className="px-6 flex flex-col-reverse md:flex-row gap-8 md:gap-12">
+          <img alt="" className="w-[300px] object-contain rounded-lg" />
+          <div className="bg-green-0 flex flex-col justify-between">
+            <div className="pb-6">
+              <h2 className="text-3xl md:text-4xl font-bold">
+                <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
+                  About{" "}
+                </span>
+                Company
+              </h2>
+              <p className="text-xl text-muted-foreground bg-transparent mt-4">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit
+                amet, consectetur adipiscing elit.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 const Contact = () => {
   return (

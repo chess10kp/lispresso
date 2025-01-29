@@ -5,7 +5,8 @@
   --terminal-color: #f7edd9;
 }
 
-body, .body {
+body,
+.body {
   background-image: url("/background.svg");
 
   background-size: 5%;
@@ -33,6 +34,9 @@ body, .body {
   position: absolute;
   top: 5%;
   left: 5%;
+}
+.geo {
+  font-family: "Geo", serif;
 }
 p {
   font-family: "Geo", serif;
@@ -279,6 +283,12 @@ header .logo a:hover {
   &:after {
     clear: both;
   }
+}
+
+.display-window {
+  height: 60vh;
+  background-color: #f7edd9;
+  border-radius: 10px;
 }
 
 .window {

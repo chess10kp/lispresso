@@ -1,4 +1,14 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {Button, buttonVariants} from "@/components/ui/button"
+
 import Image from "next/image";
 
 const About = () => {
@@ -11,8 +21,9 @@ const About = () => {
           src="/nitin-min.jpg"
           alt="@nitin"
           fallback="NM"
+          role="Co-Founder"
         />
-        <SelfInfo name="Maria E" src="/maria.png" alt="@maria" fallback="ME" />
+        <SelfInfo name="Maria E" src="/maria.png" role="Co-Founder" alt="@maria" fallback="ME" />
       </div>
     </div>
   );
@@ -20,28 +31,41 @@ const About = () => {
 
 const SelfInfo = ({
   name,
+  role,
   src,
   alt,
   fallback,
 }: {
   name: string;
   src: string;
+  role: string
   alt: string;
   fallback: string;
 }) => {
   return (
-    <>
-      <div className="flex items-center flex-col m-6">
-      <Avatar className="w-20 h-20">
-        <AvatarImage src={src} alt={alt} />
-        <AvatarFallback>NM</AvatarFallback>
-      </Avatar>
-        <h3 className="text-xl text-bold">{name}</h3>
-        <p className="text-sm text-muted-foreground">
-          <a className="text-muted-foreground text-md"></a>
+    <Card className="right-[20px] top-4 w-80 flex flex-col justify-center items-center drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+      <CardHeader className="mt-8 flex justify-center items-center pb-2">
+        <img
+          src={src}
+          alt={alt}
+          className="absolute grayscale-[0%] -top-12 rounded-full w-24 h-24 aspect-square object-cover"
+        />
+        <CardTitle className="text-center">{name}</CardTitle>
+        <CardDescription className="font-normal text-primary">{role}</CardDescription>
+      </CardHeader>
+
+      <CardContent className="text-center pb-2">
+        <p>
+          I really enjoy transforming ideas into functional software that
+          exceeds expectations
         </p>
-      </div>
-    </>
+      </CardContent>
+
+      <CardFooter>
+        <div>
+        </div>
+      </CardFooter>
+    </Card>
   );
 };
 
