@@ -14,7 +14,7 @@ export const Alert = ({
   time: number;
 }) => {
   return (
-    <div>
+    <div className="min-w-fit max-w-fit">
       {title && message && (
         <Al>
           <AlertTitle>{title}</AlertTitle>
