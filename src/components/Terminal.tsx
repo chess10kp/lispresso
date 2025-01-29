@@ -26,7 +26,7 @@ export const Terminal = () => {
     setMessage(output.join("\n"));
     setTimeout(() => {
       setMessage("");
-    }, 3000);
+    }, 30000);
   };
 
   return (

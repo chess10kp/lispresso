@@ -104,10 +104,10 @@ const HeroCards = () => {
 const About = () => {
   return (
     <section id="about" className="mx-10 py-24 sm:py-32">
-      <div className="bg-white border rounded-lg py-12">
-        <div className="px-6 flex flex-col-reverse md:flex-row gap-8 md:gap-12">
-          <div className="bg-green-0 flex flex-col justify-between">
-            <div className="pb-6">
+      <div className="bg-white border rounded-lg py-12  my-10">
+        <div className="px-6 flex flex-col-reverse md:flex-row gap-8 md:gap-12 ">
+          <div className="bg-green-0 flex  flex-col justify-between">
+            <div className="pb-6  my-10">
               <p className="text-xl text-muted-foreground bg-transparent mt-4">
                 We provide a week-long boot camp to bootstrap your developers to
                 get productive with Clojure.
@@ -115,10 +115,16 @@ const About = () => {
               <br />
 
               <h2 className="text-4xl font-bold">Why Clojure?</h2>
-              <li className="text-xl text-muted-foreground bg-transparent mt-4">
-                Immutability improves concurrency, reduces the bugs by making
-                code easy to reason with
-              </li>
+              <ul className="list-none my-4">
+                <li className="text-xl text-muted-foreground bg-transparent mt-4">
+                  Immutability improves concurrency, reduces the bugs by making
+                  code easy to reason with
+                </li>
+
+                <li className="text-xl text-muted-foreground bg-transparent mt-4">
+                  Function Purity makes debugging easier
+                </li>
+              </ul>
             </div>
           </div>
         </div>
