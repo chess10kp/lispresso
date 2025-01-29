@@ -31,7 +31,7 @@ export const Terminal = () => {
 
   return (
     <div className={`min-w-screen`}>
-      <div className="window ">
+      <div className="window m-auto">
         <div className="window__actions">
           <span className="window__actionButton window__actionButton--close"></span>
           <span className="window__actionButton window__actionButton--minimize"></span>

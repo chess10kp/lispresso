@@ -5,6 +5,11 @@
   --terminal-color: #f7edd9;
 }
 
+* {
+  scroll-behavior: smooth;
+  
+   }
+
 body,
 .body {
   background-image: url("/background.svg");
@@ -171,66 +176,19 @@ header .logo a:hover {
   background-size: cover;
 }
 
-.about .rocket:hover {
-  background-image: url("/rocket_2.png");
-}
-.about .about_us {
-  position: absolute;
-  width: 40vw;
-  left: 5%;
-  top: 20%;
-}
-.about .lisp_legacy {
-  position: absolute;
-  width: 40vw;
-  left: 20%;
-  top: 50%;
-}
-.about p2 {
-  color: #00ff26;
-  font-size: larger;
-  position: absolute;
-  left: 5%;
-  top: 10%;
-}
-
 .contact {
   height: 90vh;
   width: 99vw;
-
-  background-color: #ee7212;
-  position: absolute;
-  top: 281%;
-  left: 0%;
 }
 .contact .contact_us {
   padding: 100px;
   background-color: rgb(38, 41, 42);
-  position: absolute;
-  left: 1%;
-  top: 20%;
 }
-.contact .contact_us .one {
-  color: orange;
-}
-.contact .contact_us .two {
-  position: absolute;
-  left: 35%;
-  top: 35%;
-  color: orange;
-}
-.contact .contact_us .three {
-  position: absolute;
-  left: 56%;
-  top: 30%;
-}
+
 
 .contact .team {
   padding: 100px;
   background-color: rgb(38, 41, 42);
-  position: absolute;
-  left: 55%;
-  top: 8%;
   padding-bottom: 450px;
   padding-top: 10px;
   padding-right: 400px;
@@ -239,9 +197,7 @@ header .logo a:hover {
 .contact .team .nitin {
   border: solid;
   border-color: #ee7212;
-  position: absolute;
   width: 15vw;
-  left: 10%;
   padding-left: 20px;
   padding-bottom: 10px;
 }
@@ -249,9 +205,6 @@ header .logo a:hover {
 .contact .team .maria {
   border: solid;
   border-color: #ee7212;
-  position: absolute;
-  width: 15vw;
-  left: 55%;
   padding-left: 20px;
   padding-bottom: 10px;
 }
@@ -264,12 +217,6 @@ header .logo a:hover {
   font-size: 20px;
   text-align: center;
   text-decoration: none;
-}
-
-.contact .team .maria img {
-  width: 10vw;
-}
-.contact .team .maria li {
 }
 
 /* https://codepen.io/jhonnymoreira/pen/GMBjaG */
