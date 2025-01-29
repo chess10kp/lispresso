@@ -9,7 +9,7 @@ export const Terminal = () => {
           <span className="window__actionButton window__actionButton--minimize"></span>
           <span className="window__actionButton window__actionButton--fullscreen"></span>
         </div>
-        <Textarea placeholder="code" className="border-0 window__content">
+        <Textarea placeholder="code" className="border-0 text-black window__content">
         </Textarea>
       </div>
     </div>
