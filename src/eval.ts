@@ -90,9 +90,6 @@ class Interpreter {
   }
 
   printTokens(): Interpreter {
-    for (const token of this.tokens) {
-      console.log(token);
-    }
     return this;
   }
 
@@ -418,6 +415,27 @@ const executeAux = (
         }
         return { type: TokenType.NUMBER, value: divRes.toString() };
 
+
+    case TokenType.DEF:
+      if (block.length != 4) {
+        return new Error(Errors.SYNTAXERROR);
+      }
+
+      const [defkwd, fnIdent, params, functionBlock] = block;
+
+      if (fnIdent instanceof Array) {
+        return new Error(Errors.SYNTAXERROR);
+      }
+
+      if (symtables.length == 0) {
+        symtables.push(new Map());
+      }
+
+      symtables[symtables.length - 1].set(fnIdent.value, {
+        params: params,
+        block: functionBlock,
+      });
+      break;
       default:
 
       // NEXT: handle this case, get the function to be called and then call it
@@ -547,16 +565,8 @@ const execute = (
   return acc;
 };
 
-const i = new Interpreter();
-i.eval("(do (+ 1 1))");
-
-const j = new Interpreter();
-// const a = j.eval("(do (let a 2) (def new-fn (a b) (+ a b)) (let b 3) (+ a b (- 2 (* 3 (/ 1 100)))))");
-// const a = j.eval("(do (def new-fn (a b) (+ a b)))");
-const a = j.eval("(do (< 2 0))");
-console.dir(a, { depth: null });
-
-const b = j.eval("(do (if (> 4 2) 1 3))");
-console.dir(b, { depth: null });
+const j = new Interpreter()
+const b = j.eval("(do (+ 1 1))");
+console.log(b)
 
 export { Interpreter, Errors, TokenType as Tokens };

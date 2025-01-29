@@ -37,38 +37,35 @@ const NavLink = (props: any) => {
   );
 };
 
-// <Image
-//   className="logo"
-//   alt="logo"
-//   width={400}
-//   height={500}
-//   src="/official_logo.png"
-// />
+// #26292a
+// #00ff26
+// #85ba38
+// #f59b14
+// #2d0230
+// #f7edd9
 
 const NavBar = () => {
-  const navItems = [
-    { name: "About", link: "/about" },
-  ];
+  const navItems = [{ name: "About", link: "/about" }];
   return (
-    <Menubar className="backdrop-blur-screen m-2 bg-accent/10 flex flex-row justify-between text-foreground">
+    <Menubar className="m-2 bg-[#f7edd9] flex flex-row justify-between">
       <div>
-        <Link href="/" className="dark:text-foreground list-none font-bold">
+        <Link href="/" className="list-none font-bold">
           <Image
-            className="logo"
+            className=" logo sm:w-12 md:w-16 lg:w-20"
             alt="logo"
-            width={40}
-            height={50}
+            height={0} // Height auto-scales
+            width={100} // Set a reasonable max width
             src="/official_logo.png"
           />
         </Link>
       </div>
-      <NavigationMenu>
-        <NavigationMenuList>
+      <NavigationMenu className="bg-[#f7edd9]">
+        <NavigationMenuList className="bg-[#f7edd9]">
           {navItems.map((item, idx) => (
-            <NavigationMenuItem key={idx}>
-              <NavLink href={`${item.link}`} className="">
+            <NavigationMenuItem className="bg-[#f7edd9] nav-item" key={idx}>
+              <NavigationMenuLink href={`${item.link}`}>
                 {item.name}
-              </NavLink>
+              </NavigationMenuLink>
             </NavigationMenuItem>
           ))}
         </NavigationMenuList>
@@ -79,10 +76,11 @@ const NavBar = () => {
 
 export default function Home() {
   return (
-    <div className="body min-w-full min-h-full">
+    <div className="body relative flex flex-col min-w-full min-h-screen">
       <NavBar />
-      <Logo />
-
+      <div className="absolute top-[30%] left-[10%]">
+        <Terminal />
+      </div>
       <section className="about">
         <p> About Lispresso</p>
         <div className="about_us">
