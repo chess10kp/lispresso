@@ -17,6 +17,7 @@ import {
   NavigationMenuIndicator,
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
+import { Menubar } from "@/components/ui/menubar";
 
 import { Input } from "@/components/ui/input";
 
@@ -26,29 +27,61 @@ import { Label } from "@radix-ui/react-label";
 import { Terminal } from "@/components/Terminal";
 import { Logo } from "@/components/Logo";
 
-const NavBar = () => {
+const NavLink = (props: any) => {
   return (
-    <NavigationMenu className={`min-w-full bg-[${terminalBg}]`}>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <NavigationMenuLink>Link</NavigationMenuLink>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <Link {...props} legacyBehavior passHref>
+      <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+        {props.children}
+      </NavigationMenuLink>
+    </Link>
+  );
+};
+
+// <Image
+//   className="logo"
+//   alt="logo"
+//   width={400}
+//   height={500}
+//   src="/official_logo.png"
+// />
+
+const NavBar = () => {
+  const navItems = [
+    { name: "About", link: "/about" },
+  ];
+  return (
+    <Menubar className="backdrop-blur-screen m-2 bg-accent/10 flex flex-row justify-between text-foreground">
+      <div>
+        <Link href="/" className="dark:text-foreground list-none font-bold">
+          <Image
+            className="logo"
+            alt="logo"
+            width={40}
+            height={50}
+            src="/official_logo.png"
+          />
+        </Link>
+      </div>
+      <NavigationMenu>
+        <NavigationMenuList>
+          {navItems.map((item, idx) => (
+            <NavigationMenuItem key={idx}>
+              <NavLink href={`${item.link}`} className="">
+                {item.name}
+              </NavLink>
+            </NavigationMenuItem>
+          ))}
+        </NavigationMenuList>
+      </NavigationMenu>
+    </Menubar>
   );
 };
 
 export default function Home() {
   return (
-    <div className="">
+    <div className="body min-w-full min-h-full">
       <NavBar />
-      <Terminal></Terminal>
-      <section className="top">
-        <div className="robot"></div>
-      </section>
+      <Logo />
 
       <section className="about">
         <p> About Lispresso</p>
