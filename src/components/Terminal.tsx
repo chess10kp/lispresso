@@ -26,22 +26,22 @@ export const Terminal = () => {
     setMessage(output.join("\n"));
     setTimeout(() => {
       setMessage("");
-    }, 5000);
+    }, 3000);
   };
 
   return (
     <div className={`min-w-screen`}>
-      <div className="window">
+      <div className="window ">
         <div className="window__actions">
           <span className="window__actionButton window__actionButton--close"></span>
           <span className="window__actionButton window__actionButton--minimize"></span>
           <span className="window__actionButton window__actionButton--fullscreen"></span>
         </div>
-        <div>
-          <div>
+        <div className="bg-[#f7edd9] h-full resize-none">
+          <div className="h-full resize-none">
             <Textarea
               placeholder="code"
-              className=" focus-visible:ring-0 shadow-none border-transparent focus:shadow-none text-black min-h-full focus:outline-none outline-none  ring-0  focus:border-transparent"
+              className=" focus-visible:ring-0 h-full flex-grow shadow-none border-transparent focus:shadow-none text-black min-h-full focus:outline-none outline-none  ring-0  focus:border-transparent"
               onChange={(e) => setCode(e.target.value)}
               value={code}
             />

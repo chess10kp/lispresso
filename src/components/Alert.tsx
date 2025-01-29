@@ -14,10 +14,10 @@ export const Alert = ({
   time: number;
 }) => {
   return (
-    <div className="min-w-fit max-w-fit">
+    <div className="min-w-fit absolute left-0 bottom-0 border-0 outline-0 rounded-none max-w-fit bg-[#f7edd9]">
       {title && message && (
-        <Al>
-          <AlertTitle>{title}</AlertTitle>
+        <Al className="bottom-0 border-0 outline-0 rounded-none bg-[#f7edd9] rounded-lg" >
+          <AlertTitle className="bg-[#f7edd9] ">{title}</AlertTitle>
           <AlertDescription>{message}</AlertDescription>
         </Al>
       )}
